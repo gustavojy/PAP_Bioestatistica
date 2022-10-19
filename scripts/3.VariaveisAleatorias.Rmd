@@ -184,7 +184,7 @@ A variãncia é: $V(X)=p(1-p)$.
 
 *Exemplo:* em uma questão com 5 alternativas, qual a probabilidade de errar a questão?  
 
-Seja $acertar = p(x=1) = 1/5$ e $errar = p(x=0)$, temos pela definição que:  
+Seja $acertar = p(x=1) = p = 1/5$ e $errar = p(x=0)$, temos pela definição que:  
 
 $$p(x)=p^x (1-p)^{1-x}\\p(x=0) = (1/5)^0(1-1/5)^{1-0}\\p(x=0)=4/5\\\text{A probabilidade de erro (p(x=0)) é de 4/5 ou 0.8}$$
 
@@ -199,7 +199,7 @@ A variãncia é: $V(X)=np(1-p)$.
 
 *Exemplo:* Suponha uma embalagem de transporte e armazenamento de ovos de galinha. Apresentou 1% de ovos danificados por caixa com uma dúzia.  
 
-- a) Qual a probabilidade de 1 caixa ter 2 ovos danificados ($X=2$)?  
+a) Qual a probabilidade de 1 caixa ter 2 ovos danificados ($X=2$)?  
 
 Temos que: $p = 0,01$, $n=12$ e queremos calcular $P(X=2)$. Assim:  
 
@@ -228,7 +228,7 @@ dbinom(x = 2, size = 12, prob = 0.01)
 <br>
 
 
-- b) Qual a probabilidade de um carregamento de 100 caixas ter 90 ou mais caixas sem ter ovos danificados?  
+b) Qual a probabilidade de um carregamento de 100 caixas ter 90 ou mais caixas sem ter ovos danificados?  
 
 Primeiramente, precisamos calcular a probabilidade de 1 cartela sem ovos danificados $(P(X=0))$:  
 
@@ -250,10 +250,10 @@ Calculando no R, dentro da função `dbinom()`, devemos declarar no argumento `x
 ```{r}
 # Cálculo de Binomial
 ## Resolvendo o exercício com a função dbinom()
-(binomial_90_100 <- dbinom(x = 90:100, size = 100, prob = 0.8864))
+(binomial_90_100 <- dbinom(x = 90:100, size = 100, prob = 0.8864) %>%  round(5))
 ```
 
-Como resultado, devemos somar os resultados obtidos anteriormente
+Como resposta à pergunta, devemos somar os resultados obtidos anteriormente.  
 
 ```{r}
 sum(binomial_90_100)
@@ -266,7 +266,7 @@ Graficamente, podemos construir um gráfico de barras:
 ```{r}
 # Gráfico de barras da Distribuição Binomial do exercício anterior
 binomial <- tibble(px = 90:100,
-                   prob = binomial_90_100 %>% round(4))
+                   prob = binomial_90_100)
 
 
 ggplot(data = binomial,
@@ -274,20 +274,6 @@ ggplot(data = binomial,
   geom_col()+
   scale_x_continuous(breaks = seq(90,100,1))
 ```
-
-
-Ainda, podemos criar um gráfico para todas as probabilidades possiveis:  
-
-```{r}
-# Todas as probabilidades do exercício anterior
-p_0_100 <- dbinom(x = 0:100, size = 100, prob = 0.5)
-
-tibble(px = 0:100,
-       prob = p_0_100 %>% round(4)) %>% 
-  ggplot(aes(x = px, y = prob))+
-  geom_col()
-```
-
 
 <br>
 
