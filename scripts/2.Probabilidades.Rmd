@@ -1,0 +1,462 @@
+---
+title: "Teoria das Probabilidades"
+author: "Gustavo Jun Yakushiji"
+date: "Outubro de 2022"
+output:
+  html_document:
+    theme: paper
+    highlight: pygments
+    toc: TRUE
+    toc_float: TRUE
+    toc_depth: 4
+    number_sections: TRUE
+  pdf_document:
+    toc: TRUE
+    toc_depth: 4
+    number_sections: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE,
+                      echo = TRUE,
+                      message = FALSE,
+                      comment = "",
+                      cache = TRUE,
+                      error = TRUE,
+                      fig.align = "center",
+                      fig.width = 12,
+                      fig.height = 5)
+
+# Bibliotecas----------------------------------------------------------
+library(tidyverse)
+library(patchwork)
+```
+
+<br>
+
+A **teoria das probabilidades** é um ramo da matemática que desenvolve e avalia modelos para descrever **fenômenos aleatórios**, servindo como base teórica para o desenvolvimento de técnicas estatísticas que visam descrever fenômenos aleatórios.  
+
+<br>
+
+# Conceitos básicos
+
+## Tipos de fenômenos
+
+### a) Determinísticos {-}
+
+Fenômenos que, repetidos **inúmeras vezes**, em **condições semelhantes**, geram resultados essencialmente **idênticos**.  
+
+*Exemplos*: Leis da física (gravidade); Leis da química (a uma certa temperatura, um determinado sólido passará para o estado líquido).  
+
+### b) Aleatórios {-}
+
+Fenômenos (ou experimentos) que, repetidos **inúmeras vezes** sob as **mesmas condições**, geram **resultados diferentes**. Nesse caso, sabemos todos os possíveis resultados, porém, não sabemos qual será o resultado **antes** de sua realização (**a priori**).  
+
+*Exemplos*: Lançamento de moeda e dado; resultado de eventos esportivos e jogos de azar; condições climáticas.  
+
+Os fenômenos aleatórios serão os objetos de estudo para os demais tópicos descritos a seguir.  
+
+<br>
+
+## Fenômenos aleatórios
+
+### a) Espaço amostral ($\Omega$) {-}
+
+Conjunto de todos os possíveis resultados de um experimento aleatório.  
+
+*Exemplos*:  
+
+- Lançamento de dados: $\Omega$ = {1,2,3,4,5,6};  
+- Lançamento de moeda: $\Omega$ = {cara, coroa};  
+- Resultado de uma partida de futebol: $\Omega$ = {vitória, derrota, empate};  
+- Peso de frutos: $\Omega$ = (0,$\infty$) = $\mathbb{R}^+$.  
+
+### b) Pontos amostrais ($\omega$) {-}
+
+Elementos que compõem o espaço amostral ($\Omega$).  
+
+*Exemplo*: Lançamento de moeda: $\omega_1$ = cara; $\omega_2$ = coroa.  
+
+<br>
+
+No R, para criarmos um espaço amostral, utilizamos a função `c()`, tendo como argumentos os pontos amostrais (elementos) que o compõem.  
+
+```{r}
+# Exemplo: espaço amostral de um dado
+(dado <- c(1,2,3,4,5,6))
+
+# Exemplo: espaço amostral de uma moeda
+(moeda <- c("cara", "coroa"))
+```
+
+Também podemos utilizar a função `seq()` para determinar uma sequência numérica, tendo como argumentos o primeiro número (`from =`), o último número (`to =`) e a sequência numérica (*de quanto em quanto* - `by =`).  
+
+```{r}
+# Utilizando a função seq()
+(dado_seq <- seq(from = 1, to = 6, by = 1))
+```
+
+<br>
+
+### c) Eventos (A, B, C ...) {-}
+
+Subconjunto do espaço amostral ($\Omega$). Podemos ter diferentes classificações de eventos. A seguir, exemplificaremos com o lançamento de dado, tendo como espaço amostral $\Omega$ = {1,2,3,4,5,6}.  
+
+- **Evento simples**: A = {3};  
+- **Evento composto**: B = *números ímpares* = {1,3,5}
+- **Evento impossível**: C = {31} = $\phi$ (não se pode obter tal valor em um dado);  
+- **Evento certo**: $1 \leq D \leq 6$; D = $\Omega$.  
+
+
+<br>
+
+# Teoria dos conjuntos
+
+Utilizada para definir operações com eventos.  
+
+## Conjunto vazio ($Ø$)
+
+Conjunto sem elementos, denotado por $Ø$.  
+
+## União ($A \cup B$)
+
+Evento que consiste na união de **todos** os pontos amostrais (elementos) de ambos os eventos envolvidos. A união é denotada por $A \cup B$.  
+
+```{r, fig.align='center', echo=FALSE}
+knitr::include_graphics("~/GitHub/PAP_Bioestatistica/figuras/2.Probabilidades/uniao.png")
+```
+
+## Intersecção ($A \cap B$)
+
+Evento composto pelos pontos amostrais (elementos) em **comum** entre os eventos. A intersecção é denotada por $A \cap B$.  
+
+```{r, fig.align='center', echo=FALSE}
+knitr::include_graphics("~/GitHub/PAP_Bioestatistica/figuras/2.Probabilidades/intersec.png")
+```
+
+## Evento disjunto (ou mutuamente exclusivo)
+
+Evento que não podem ocorrer simultaneamente, ou seja, possuem intersecção vazia ($A \cap B =$ {Ø}).  
+
+```{r, fig.align='center', echo=FALSE}
+knitr::include_graphics("~/GitHub/PAP_Bioestatistica/figuras/2.Probabilidades/disjuntos.png")
+```
+
+## Evento complementar ($A^c$ ou $\bar A$)
+
+Complemento ($A^c$ ou $\bar A$) do evento proposto ($A$) ou eventos que a união é o espaço amostral ($\Omega$).  
+
+```{r, fig.align='center', echo=FALSE}
+knitr::include_graphics("~/GitHub/PAP_Bioestatistica/figuras/2.Probabilidades/complem.png")
+```
+
+<br>
+
+# Conceitos de Probabilidade
+
+## Definição Clássica de Probabilidade (a priori)
+
+A probabilidade da ocorrência de uma evento $A$ é denotada por $P(A)$, sendo definida como a razão entre $m$ elementos do evento e $n$ resultados igualmente prováveis do espaço amostral $\Omega$.  
+
+$$P(A) = \frac{m}n$$
+
+*Exemplo*: considere o lançamento de um dado "honesto" - todos os valores possuem mesma probabilidade de ocorrência - cujo espaço amostral é dados por $\Omega$ = {1,2,3,4,5,6}, logo $n = 6$:
+
+- Qual a probabilidade de ocorrer o número 3? $m=1$, logo $P(3) = 1/6$;
+- Qual a probabilidade de ocorrer número par? $m=3$, logo $P(par) = 3/6=1/2$.  
+
+## Definição Frequentista de Probabilidade (a posteriori)
+
+Considere que um experimento aleatório $\epsilon$ seja repetido $n$ vezes e o evento $A$ tenha ocorrido $m$ vezes. Então, a frequência relativa $f_r$ do evento $A$ é dado por:  
+
+$$f_r=\frac{m}n$$
+
+*Exemplo*: Considere o lançamento de uma moeda:  
+
+- Caso seja lançada 500 vezes ($n=500$), com 240 resultados sendo cara ($m=240$), temos: $f_r(cara)=240/500 = 0.48$.  
+
+No R, utilizamos a função `sample()` para simular frequências de probabilidade, tendo como argumentos: `x =` para definir o espaço amostral; `size =` para número de repetições; e `replace = TRUE` para assumir a reposição dos elementos a cada nova repetição realizada.  
+
+```{r}
+# Exemplo: lançamento de moeda 10 vezes
+(moeda <- c("cara", "coroa"))
+
+(resultado_moedas <- sample(x = moeda, size = 10, replace = TRUE))
+```
+
+Podemos criar tanto uma tabela de frequências absolutas, como de probabilidades (ou frequências relativas) para quantificarmos as ocorrências dos eventos aleatórios. Para isso, utilizamos as funções `table()` e `prop.table()`, respectivamente.  
+
+```{r}
+# Frequência absoluta do lançamento das moedas
+(Freq.Abs = table(resultado_moedas))
+```
+
+```{r}
+# Frequência relativa do lançamento das moedas
+(Probabilidade = prop.table(table(resultado_moedas)))
+```
+
+```{r}
+# Tabela com ambas as frequências
+cbind(Freq.Abs, Probabilidade)
+```
+
+Outra definição: caso o número de repetições tender ao infinito ($n\to \infty$), a frequência relativa de um evento $A$ tenderá para uma constante $P(A)$. Em outras palavras, quanto mais repetições de um experimento aleatório são realizadas, maior a tendência de que a probabilidade de ocorrência dos eventos sejam iguais entre si.  
+
+$$\lim_{n\to\infty}f_r(A) = P(A)$$
+
+Para verificarmos tal definição, faremos dois experimentos aleatórios, com o auxílio das seguintes funções criadas:  
+
+```{r}
+# Função de simulação
+prob.frequentista <- function(esp.amostral, repeticoes){
+  
+  library(tidyverse)
+  
+  exp <- sample(x = esp.amostral,
+                size = repeticoes,
+                replace = TRUE)
+  
+  Freq.abs <- table(exp)
+  
+  Probabilidade <- prop.table(table(exp)) %>% round(3)
+  
+  resultado <- cbind(Freq.abs, Probabilidade) %>%
+    data.frame() %>% rownames_to_column("Elementos")
+  
+  return(resultado)
+}
+```
+
+```{r}
+# Função que retorna gráficos de frequências e probabilidades das simulações
+grafico <- function(simulacao){
+  library(ggplot2)
+  library(patchwork)
+  
+  repet <- sum(simulacao$Freq.abs)
+  
+  p1 <- ggplot(data = simulacao,
+               aes(x = Elementos, y = Freq.abs, fill = Elementos))+
+    geom_col(show.legend = F)+
+    geom_text(aes(label = Freq.abs),
+              color = "white",
+              vjust = 2.5)+
+    labs(title = paste0(repet, " repetições"),
+         x = "",
+         y = "Freq. absoluta")+
+    theme_bw()
+  
+  p2 <- ggplot(data = simulacao,
+               aes(x = Elementos, y = Probabilidade, fill = Elementos))+
+    geom_col(show.legend = F)+
+    geom_text(aes(label = Probabilidade),
+              color = "white",
+              vjust = 2.5)+
+    labs(title = paste0(repet, " repetições"),
+         x = "",
+         y = "Probabilidade")+
+    theme_bw()
+  
+  p1+p2
+}
+```
+
+
+### a) Lançamento de moeda {-}
+
+```{r}
+# Espaço amostral da moeda
+(moeda <- c("cara", "coroa"))
+```
+
+- Simulando 100 lançamentos (n = 100):  
+
+```{r}
+# Simulando 100 lançamentos de moeda
+(moeda_n100 <- prob.frequentista(esp.amostral = moeda,
+                                 repeticoes = 100))
+
+# Gráficos
+grafico(simulacao = moeda_n100)
+```
+
+- Simulando 1000 lançamentos (n = 1000):  
+
+```{r}
+# Simulando 1000 lançamentos de moeda
+(moeda_n1000 <- prob.frequentista(esp.amostral = moeda,
+                                  repeticoes = 1000))
+
+# Gráficos
+grafico(simulacao = moeda_n1000)
+```
+
+- Simulando 1.000.000 de lançamentos (n = 1000000):  
+
+```{r}
+# Simulando 1.000.000 de lançamentos de moeda
+(moeda_n.milhao <- prob.frequentista(esp.amostral = moeda,
+                                     repeticoes = 1000000))
+
+# Gráficos
+grafico(simulacao = moeda_n.milhao)
+```
+
+Perceba que, conforme aumentamos o número de repetições, as probabilidades de ambos eventos se aproximam da igualdade entre si (tendem à constante $P(A) = P(B) = 1/2$).  
+
+### b) Lançamento de dado {-}
+
+Da mesma maneira, podemos simular o lançamento de dado, cujo espaço amostral é dado por:  
+
+```{r}
+# Espaço amostral do dado
+(dado <- c(1,2,3,4,5,6))
+```
+
+- Simulando 100 lançamentos (n = 100):  
+
+```{r}
+# Simulando 100 lançamentos de dado
+(dado_n100 <- prob.frequentista(esp.amostral = dado,
+                                 repeticoes = 100))
+
+# Gráficos
+grafico(simulacao = dado_n100)
+```
+
+- Simulando 1000 lançamentos (n = 1000):  
+
+```{r}
+# Simulando 1000 lançamentos de dado
+(dado_n1000 <- prob.frequentista(esp.amostral = dado,
+                                  repeticoes = 1000))
+
+# Gráficos
+grafico(simulacao = dado_n1000)
+```
+
+- Simulando 1.000.000 de lançamentos (n = 1000000):  
+
+```{r}
+# Simulando 1.000.000 de lançamentos de dado
+(dado_n.milhao <- prob.frequentista(esp.amostral = dado,
+                                     repeticoes = 1000000))
+
+# Gráficos
+grafico(simulacao = dado_n.milhao)
+```
+
+Novamente, conforme aumentamos o número de repetições, as probabilidades de ambos eventos se aproximam da igualdade entre si (tendem à constante $P(1) = P(2) = ... = P(6) = 1/6$)
+
+## Definição Axiomática de Probabilidade
+
+Considere os seguintes axiomas (propriedades) para um evento $A$, pertencente a um espaço amostral $\Omega$, cuja probabilidade é representada por $P(A)$:  
+
+1. $0 \leq P(A) \leq 1$: *o resultado da probabilidade de qualquer evento será um valor entre 0 e 1*;  
+2. $P(\Omega) = 1$: *a probabilidade do espaço amostral é igual a 1*;  
+3. Se $A_1$, $A_2$, ..., $A_n$ forem, dois a dois, eventos disjuntos, então $P(\cup^n_{i=1}A_i) = \sum^n_{i=1}P(A_i)$: *a probabilidade da união de todos os eventos pertencentes a um espaço amostral é a somatória da probabilidade de todos os eventos pertencentes ao mesmo espaço amostral*.  
+
+Com isso, verificamos que:  
+
+1. $P(\phi)=0$: *a probabilidade de um evento vazio é 0*;  
+2. $P(A)=1-P(A^c)$: *A probabilidade de um evento é a subtração de 1 com a probabilidade do seu evento complementar*;  
+3. $P(A\cup B)=P(A)+P(B)-P(A\cap B)$, sendo $A$ e $B$ eventos quaisquer;  
+4. $P(A\cup B)=P(A)+P(B)$, caso $A$ e $B$ seja eventos disjuntos.  
+
+*Exemplo*: Supondo uma turma de alunos (M) e alunas (F) da ESALQ dos cursos de ciências biológicas (Bio) e engenharia agronômica (Agro), considere a seguinte tabela de frequências:  
+
+```{r, echo=FALSE}
+tribble(
+  ~` `, ~"F", ~"M", ~"Total",
+  "Bio",16,8,24,
+  "Agro",21,5,26,
+  "Total",37,13,50
+)
+```
+
+Podemos calcular algumas das seguintes probabilidades:  
+
+- Ser do sexo feminino: $P(F) = 37/50 = 0,74$;  
+- Ser do sexo masculino: $P(M) = 13/50 = 0,26$;  
+- Ser do curso de ciências biológicas: $P(Bio) = 24/50 = 0,48$;  
+- Ser do curso de eng. agronômica: $P(Agro) = 26/50 = 0,52$.  
+- Ser do sexo feminino **E** do curso de ciências biológicas:  
+
+$$P(F \cap Bio) = 16/50 = 0,32$$
+
+- Ser do sexo feminino **OU** do curso de ciências biológicas:  
+
+$$P(F \cup Bio) = P(F) + P(Bio) - P(F \cap Bio) \\ P(F \cup Bio)= 0,74 + 0,48 - 0,32\\P(F \cup Bio)=0,90$$
+
+- **Não** ser do sexo feminino, nem do curso de ciências biológicas:  
+
+$$P((F \cup Bio)^c) = 1 - P(F \cup Bio) \\ P((F \cup Bio)^c) = 1 - (P(F) + P(Bio) - P(F \cap Bio)) \\ P((F \cup Bio)^c) = 1 - 0,90 \\ P((F \cup Bio)^c) = 0,10$$
+
+Sugestão: *Como prática, calcule as demais probabilidades possíveis.*  
+
+
+## Probabilidade Condicional e Independência
+
+Seja $A$ e $B$ eventos do espaço amostral $\Omega$ e $P(B)>0$, sendo que a ocorrência do evento $B$ é condicionada pela ocorrência do evento $A$ ($P(B|A)$ - *probabilidade de A dado B*):  
+
+$$P(B|A) = \frac{P(A\cap B)}{P(A)}$$
+
+No caso inverso:  
+
+$$P(A|B) = \frac{P(A\cap B)}{P(B)}$$
+
+*Exemplo*: Em uma urna com 8 bolas vermelhas e 2 bolas brancas, retira-se 2 bolas, sem reposição. Defina $P(B|A)$, sendo:  
+
+- A = {primeira bola branca} **E** B = {segunda bola branca};  
+
+$$P(B|A) = \frac{P(A\cap B)}{P(A)} \\ P(B|A) = \frac{2/10*1/9}{2/10}=1/9 = 0,11$$
+
+- C = {primeira bola branca} **E** D = {segunda bola vermelha};  
+
+$$P(D|C) = \frac{P(C\cap D)}{P(C)} \\ P(D|C) = \frac{2/10*8/9}{2/10}=8/9 = 0,89$$
+
+## Teorema da multiplicação (Regra do Produto)
+
+Dado que:  
+
+$$P(A|B) = \frac{P(A\cap B)}{P(B)}$$
+
+Temos como **regra do produto** a seguinte equação:  
+
+$$P(A\cap B) = P(A|B)*P(B)$$
+
+*Exemplo:* Qual a probabilidade de se obter dois ases seguidos em cartas de baralho com 52 cartas...  
+
+- Com reposição de carta?
+
+$$P(A_1 \cap A_2) = P(A_2|A_1)*P(A_1) = P(A_2)*P(A_1)=4/52*4/52=0.006$$
+
+- Sem reposição de cartas?
+
+$$P(A_1 \cap A_2) = P(A_2|A_1)*P(A_1) = 3/51*4/52=0.004$$
+
+## Eventos Independentes
+
+Caso os eventos $A$ e $B$ sejam independentes (a ocorrência de um não interfira no outro):  
+
+$$P(B|A) = P(B)\\ou\\P(A|B) = P(A)$$
+
+Na regra do produto temos:  
+
+$$P(A\cap B)=P(B)*P(A|B) = P(B)*P(A)\\ou\\P(A\cap B)=P(A)*P(B|A) = P(A)*P(B)$$
+
+*Exemplo:* Considere lançamento de dados e os seguintes eventos. Posteriormente, responda: Os eventos são independentes?  
+
+- Evento A = *resultado é um número par* ($A = {2,4,6}$);  
+- Evento B = *resultado é um número menor ou igual a 4* ($B = {1,2,3,4}$).  
+
+Temos que:  
+
+- $P (A\cap B) = 2/6$;  
+- $P(A) = 3/6$;  
+- $P(B) = 4/6$.  
+
+$P(A\cap B)=P(A)*P(B) = 3/6*4/6 = 1/3$, e $P (A\cap B) = 2/6 = 1/3$; assim, pela definição, confirmamos que $P(A\cap B)=P(A)*P(B)$, logo são eventos independentes.  
+
+

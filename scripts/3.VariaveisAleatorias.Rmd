@@ -1,0 +1,303 @@
+---
+title: "Variáveis Aleatórias e Distribuição de Probabilidades"
+author: "Gustavo Jun Yakushiji"
+date: "Outubro de 2022"
+output:
+  html_document:
+    theme: paper
+    highlight: pygments
+    toc: TRUE
+    toc_float: TRUE
+    toc_depth: 4
+    number_sections: TRUE
+  pdf_document:
+    toc: TRUE
+    toc_depth: 4
+    number_sections: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE,
+                      echo = TRUE,
+                      message = FALSE,
+                      comment = "",
+                      cache = TRUE,
+                      error = TRUE,
+                      fig.align = "center",
+                      fig.width = 12,
+                      fig.height = 5)
+
+# Bibliotecas----------------------------------------------------------
+library(tidyverse)
+```
+
+<br>
+
+# Pacotes utilizados {-}
+
+```{r, eval=FALSE}
+install.packages("tidyverse")
+library(tidyverse)
+```
+
+
+<br>
+
+# Variáveis Aleatórias
+
+Variável aleatória é a descrição numérica do resultado de um fenômeno ou experimento aleatório. Utiliza-se dos conceitos apresentados no módulo de **Probabilidades**.  
+
+É definida da seguinte maneira: Seja $\epsilon$ um experimento aleatório e $\Omega$ o espaço amostral deste experimento. A variável aleatória é uma função $X$, associada a elementos $\omega$ contidos no espaço amostral $\Omega$ ($\omega \in \Omega$), sendo $X(\omega)$ um número real.  
+
+$$X : {\Omega \to \mathbb{R}\\\omega \to X(\omega)}$$
+
+*Exemplo 1*: Considere o lançamento de duas moedas honestas e defina a variável aleatória $X$ sendo o número de resultados *coroa*.  
+
+```{r, echo=FALSE}
+knitr::include_graphics("~/GitHub/PAP_Bioestatistica/figuras/3.VarAleat/var_aleat1.png")
+```
+
+Temos como elementos (possíveis resultados) do espaço amostral $\{CaraCara, CaraCoroa, CoroaCara, CoroaCoroa\}$. Para cada elemento, atribuímos um valor referente ao número de $Coroa$ presentes, sendo 0 para $\{CaraCara\}$, 1 para $\{CaraCoroa\}$ ou $\{CoroaCara\}$, e 2 para $\{CoroaCoroa\}$.  
+
+<br>
+
+## Tipos de variáveis aleatórias
+
+### Variáveis Aleatórias Discretas
+
+Uma variável aleatória é **discreta** quando os possíveis valores da variável aleatória assumem valores inteiros finitos, com possível contagem.  
+
+*Exemplos:* número de sementes germinadas; número de filhos de uma população.  
+*Exemplo de notação*:  
+
+$$X_{\{0,1,2,3\}}(x) = \cases{\text{1  se  }x \in \{0,1,2,3\};\\\text{0  se  } x \notin \{0,1,2,3\}.}$$
+
+### Variáveis Aleatórias Contínuas
+
+Uma variável aleatória é **contínua** quando os possíveis valores da variável aleatória assumem valores com infinitos intervalos (pode assumir qualquer valor dentro deste mesmo intervalo), sem possibilidade de contagem.  
+
+*Exemplos:* Altura e peso de alunos; rendimento de frutos (kg/ha).  
+
+*Exemplo de notação*:  
+
+$$X_{\mathbb{R}^+}(x) = \cases{\text{1  se  }x \in {\mathbb{R}^+};\\\text{0  se  } x \notin {\mathbb{R}^+}.}$$
+
+<br>
+
+## Função de Probabilidades
+
+Função de probabilidade para variáveis aleatórias **discretas**.  
+
+Uma variável aleatória discreta $X$, que assume os valores $x_1, x_2, ..., x_n$ tem a seguinte função de probabilidade:  
+
+$$P(X = x_i) = p(x_i) = p_i$$
+
+Satisfazendo as seguintes condições:  
+
+- A probabilidade de cada valor deve estar entre 0 e 1;  
+
+$$0\le p(x_i) \le 1, \quad\quad i = 1,2,...$$
+
+- A soma de todas as probabilidades é igual a 1.  
+
+$$\sum_ip(x_i)=1$$
+
+*Exemplo 1*: Função de probabilidades ao lançar duas moedas em um experimento aleatório. Definir as probabilidades de ocorrência de caras ($P(X = xi)$), sendo $X$ as possíveis ocorrências da variável aleatória discreta.  
+
+Para $\Omega = \{CaraCara, CoroaCoroa, CaraCoroa, CoroaCara\}$.  
+
+```{r, echo=FALSE}
+tibble::tribble(
+  ~X, ~`Frequência`, ~"P(X = xi)",
+  "0", "1", "1/4",
+  "1", "2", "2/4",
+  "2", "1", "1/4",
+  "Total", "4", "1"
+) %>% knitr::kable(align = "c")
+```
+
+Ou seja, a probabilidade de não haver resultado cara é de $P(0) = 1/4$; ocorrer 1 cara, $P(1) = 2/4$ e 2 caras, $P(2) = 1/4$
+
+<br>
+
+## Função Densidade de Probabilidades
+
+Função de probabilidade para variáveis aleatórias **contínuas**, denominada Função Densidade de Probabilidades. Nesse caso, atribui-se probabilidades a **intervalos** de valores. É definida por:  
+
+$$P(a < Y < b) = \int^{b}_{a}f(y)dy$$
+
+Deve seguir as seguintes propriedades:  
+
+- É uma função não negativa ($f(y) \ge 0$);  
+
+- A área total sob a curva deve ser igual a 1.  
+
+$$\int^{+\infty}_{-\infty}f(y)dy = 1$$
+
+<br>
+
+## Esperança Matemática
+
+Análoga à média, porém para variáveis aleatórias. Denotada por $E$.  
+
+### De Variável Aleatória Discreta
+
+$$E(X) = \sum_{x\in \mathbb{R}_x}xP(X=x)$$
+
+### De Variável Aleatória Contínua
+
+$$E(X) = \int_{-\infty}^{+\infty}xf(x)dx$$
+
+<br>
+
+## Variância
+
+Medida de dispersão para variáveis aleatórias, no caso, a variância.  
+
+$$V(X) = E(X^2)-E(X)^2$$
+
+### De Variável Aleatória Discreta
+
+$$V(X)=\sum_{x\in \mathbb{R}_x}x^2P(P=x)-[\sum_{x\in \mathbb{R}_x}xP(P=x)]^2$$
+
+### De Variável Aleatória Contínua
+
+$$V(X)=\int_{x\in \mathbb{R}_x}x^2f(x)dx-[\int_{x\in \mathbb{R}_x}xf(x)dx]^2$$
+
+<br>
+<br>
+
+# Distribuição de Probabilidades
+
+## Modelos Probabilísticos Discretos
+
+### Distribuição Bernoulli
+
+Variável aleatória $X$ com apenas **dois resultados possíveis**, sendo 0 a representação do **"fracasso" ou "negativo"** e 1, **"sucesso" ou "positivo"**. Assim, denotamos $X\sim Ber(p)$ ($X$ tem distribuição de Bernoulli com parâmetro $p$), tendo como função de probabilidade:  
+
+$$p(x) = \cases{1-p \quad \text{para "fracasso" ou } x=0\\p \quad\quad\quad \text{para "sucesso" ou }x=1}$$
+
+$$p(x)=p^x (1-p)^{1-x}\quad \text{para }x\in\{0,1\}\quad p\in(0,1)$$
+
+A esperança é: $E(X)=p$;  
+A variãncia é: $V(X)=p(1-p)$.  
+
+*Exemplo:* em uma questão com 5 alternativas, qual a probabilidade de errar a questão?  
+
+Seja $acertar = p(x=1) = 1/5$ e $errar = p(x=0)$, temos pela definição que:  
+
+$$p(x)=p^x (1-p)^{1-x}\\p(x=0) = (1/5)^0(1-1/5)^{1-0}\\p(x=0)=4/5\\\text{A probabilidade de erro (p(x=0)) é de 4/5 ou 0.8}$$
+
+### Distribuição Binomial
+
+Variável aleatória Binomial ($X\sim Bin(n,p)$) conta o número de sucessos em $n$ ensaios (repetições ou tentativas) **independentes** de Bernoulli de um mesmo experimento aleatório. O parâmetro $p$ denota a probabilidade de sucesso em cada ensaio Bernoulli e $n$, o número de tentativas. A função de probabilidades da variável aleatória Binomial é dada por:  
+
+$$P(X=x)=\binom{n}xp^x(1-p)^{n-x} = \frac{n!}{(n-x)!x!}p^x(1-p)^{n-x}\\\text{para }x\in\{0,1,2,...,n\}\quad p\in(0,1)$$
+
+A esperança é: $E(X)=np$;  
+A variãncia é: $V(X)=np(1-p)$.  
+
+*Exemplo:* Suponha uma embalagem de transporte e armazenamento de ovos de galinha. Apresentou 1% de ovos danificados por caixa com uma dúzia.  
+
+- a) Qual a probabilidade de 1 caixa ter 2 ovos danificados ($X=2$)?  
+
+Temos que: $p = 0,01$, $n=12$ e queremos calcular $P(X=2)$. Assim:  
+
+$$P(X=x)=\frac{n!}{(n-x)!x!}p^x(1-p)^{n-x}\\P(X=2)=\frac{12!}{(12-2)!2!}0,01^2(1-0,01)^{12-2}\\P(X=2)=0,00597$$
+
+No R, podemos utilizar funções que calculam fatorial (`factorial()`), combinação (`choosen()`) e diretamente o Binomial (`dbinom()`):  
+
+```{r}
+# Cálculo de fatorial
+## Resolvendo o exercício utilizando a função factorial()
+( factorial(12) / ( factorial(12-2) * factorial(2) ) ) * 0.01^2 * (1-0.01)^(12-2)
+```
+
+```{r}
+# Cálculo de combinação
+## Resolvendo o exercício com a função choose()
+choose(n = 12, k = 2) * 0.01^2 * (1-0.01)^(12-2)
+```
+
+```{r}
+# Cálculo de Binomial
+## Resolvendo o exercício com a função dbinom()
+dbinom(x = 2, size = 12, prob = 0.01)
+```
+
+<br>
+
+
+- b) Qual a probabilidade de um carregamento de 100 caixas ter 90 ou mais caixas sem ter ovos danificados?  
+
+Primeiramente, precisamos calcular a probabilidade de 1 cartela sem ovos danificados $(P(X=0))$:  
+
+$$P(X=0)=\binom{12}00,01^0-(1-0.01)^{12-0} = 0,8864$$
+
+```{r}
+# Probabilidade de uma cartela sem ovos danificados - P(X=0)
+dbinom(x = 0, size = 12, prob = 0.01)
+```
+
+O valor de 0,8864 é a probabilidade de 1 cartela não sofrer dano. Assim, essa será a probabilidade utilizada ($p=0,8864$) para calcularmos a probabilidade de 90 ou mais cartelas sem ovos quebrados.  
+
+Para isso, devemos calcular a probabilidade de $P(X=90),P(X=91),...,P(X=100)$ e somar os resultados obtidos.  
+
+$$P(X\ge 90) = P(X=90)+P(X=91)+...+P(X=100)\\P(X\ge 90) = \sum^{y=n=100}_{y=90}\binom{100}y0,8864^y(1-0,8864)^{100-y}$$
+
+Calculando no R, dentro da função `dbinom()`, devemos declarar no argumento `x =` as probabilidades que desejamos calcular.  
+
+```{r}
+# Cálculo de Binomial
+## Resolvendo o exercício com a função dbinom()
+(binomial_90_100 <- dbinom(x = 90:100, size = 100, prob = 0.8864))
+```
+
+Como resultado, devemos somar os resultados obtidos anteriormente
+
+```{r}
+sum(binomial_90_100)
+```
+
+Assim, temos a probabilidade de 40,82% para que 90 ou mais cartelas de ovos com uma dúzia se mantenham intactas no transporte.
+
+Graficamente, podemos construir um gráfico de barras:  
+
+```{r}
+# Gráfico de barras da Distribuição Binomial do exercício anterior
+binomial <- tibble(px = 90:100,
+                   prob = binomial_90_100 %>% round(4))
+
+
+ggplot(data = binomial,
+       aes(x = px, y = prob))+
+  geom_col()+
+  scale_x_continuous(breaks = seq(90,100,1))
+```
+
+
+Ainda, podemos criar um gráfico para todas as probabilidades possiveis:  
+
+```{r}
+# Todas as probabilidades do exercício anterior
+p_0_100 <- dbinom(x = 0:100, size = 100, prob = 0.5)
+
+tibble(px = 0:100,
+       prob = p_0_100 %>% round(4)) %>% 
+  ggplot(aes(x = px, y = prob))+
+  geom_col()
+```
+
+
+<br>
+
+## Modelos Probabilísticos Contínuos
+
+
+
+<br>
+
+
+
+
+
