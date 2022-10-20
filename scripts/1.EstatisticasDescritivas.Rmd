@@ -439,7 +439,7 @@ stem(dados$salario, scale=0.5)
 Consiste no resumo dos dados para alguns valores que sejam representativos para toda a série. São divididos em medidas de tendência central e medidas de dispersão, sendo complementares entre si, a fim de resumir os dados de maneira concisa, porém de forma mais completa o possível.  
 
 ```{r, echo=FALSE,fig.align='center'}
-knitr::include_graphics("~/GitHub/PAP_Bioestatistica/figuras/1.EstDescritiva/med_resumo.png")
+knitr::include_graphics("~/GitHub/PAP_Bioestatistica/figuras/1.Descritivas/med_resumo.png")
 ```
 
 No gráfico acima, foram divididos dois grupos, cujas médias das alturas (linhas pretas) são bem próximas. Contudo, pode-se observar que a dispersão dos valores entre os grupo é muito distinto. Sendo assim, esse exemplo ilustra a importância de se observar, de maneira conjunta, as medidas de posição e de dispersão.  
@@ -626,11 +626,11 @@ A **distância interquantil** é uma medida de dispersão que não sofre a influ
 
 $$IQR = Q3-Q1$$  
 
-No R, utilizamos a função `IQR()` para calcular a distância interquantil. Da mesma forma que a função `quantile()`, podemos selecionar o tipo de algoritmo adotado a partir do argumento `type =`.  
+No R, utilizamos a função `IQR()` para calcular a distância interquantil.  
 
 ```{r}
 # Distância interquantil
-IQR(dados$altura, type = 3)
+IQR(dados$altura)
 ```
 
 #### Boxplot
@@ -669,7 +669,7 @@ O desvio padrão fornece uma medida de dispersão ao redor da média. Quanto mai
 
 - Variância ($s^2$)  
 
-$$ s^2 = \frac{1}{n-1}\sum_{i=1}^{n} (x_i-\bar{x})^2 = \frac{1}{n-1}\sum_{i=1}^{n} (x_i^2-n\bar{x}^2)$$
+$$ s^2 = \frac{1}{n-1}\sum_{i=1}^{n} (x_i-\bar{x})^2 = \frac{1}{n-1}\sum_{i=1}^{n} x_i^2-n\bar{x}^2$$
 
 - Desvio Padrão ($s$)  
 
@@ -689,14 +689,14 @@ sd(dados$idade)
 sd(dados$altura)
 ```
 
-Para calcular a variância e o desvio padrão de multiplas variáveis, usa-se a função `purrr::map()`, tendo como argumento o tipo de operação a ser realizada (nesse caso, `sd` para desvio padrão ou `var` para a variância). Perceba que é atribuído valores ausentes (`NA`) para as variáveis categóricas.  
+Para calcular o desvio padrão de multiplas variáveis, usa-se a função `lapply`, com o segundo argumento indicando a devida operação (`sd` ou `var`, no caso).  
 
 ```{r}
 # Variância múltipla
-dados %>% purrr::map(var)
+lapply(dados[, 4:8], var)
 
 # Desvio padrão múltiplo
-dados %>% purrr::map(sd)
+lapply(dados[, 4:8], sd)
 ```
 
 Sendo assim, o desvio padrão indica, em média, qual será o desvio (erro) que se comete ao substituir cada observação pela medida-resumo adotada - no caso, substituir pela média. Ainda, se apresenta como uma boa medida para comparar variáveis com mesma unidade e médias próximas (distribuição homogênea/normal).  
@@ -833,7 +833,7 @@ Através do diagrama de dispersão é possível ter uma idéia inicial de como a
 A imagem a seguir ilustra os tipos de direção da correlação linear.  
 
 ```{r, echo=FALSE, fig.cap="Fonte: Bussab e Morettin (2010).", fig.align='center'}
-knitr::include_graphics("~/GitHub/PAP_Bioestatistica/figuras/1.EstDescritiva/exploratoria_1.png")
+knitr::include_graphics("~/GitHub/PAP_Bioestatistica/figuras/1.Descritivas/exploratoria_1.png")
 ```
 
 **(a) Correlação Linear Positiva:** à medida que a variável X aumenta, os valores de Y também tendem a aumentar, sendo possível ajustar uma reta crescente que passe entre os pontos;  
