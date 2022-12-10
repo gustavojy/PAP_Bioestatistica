@@ -11,4 +11,4 @@ Repositório com materiais de apoio em R para a disciplina de Bioestatística (2
 3. Variáveis aleatórias e distribuição de probabilidades
 - Disponível para download em: https://github.com/gustavojy/PAP_Bioestatistica/blob/main/download/3.VarAleat_DistProb.zip?raw=true  
 
-4. Estatística inferencial (a ser ministrado)
+4. Estatística inferencial
